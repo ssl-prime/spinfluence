@@ -1,17 +1,11 @@
 package util
 
 import (
-	//"encoding/json"
 	"fmt"
-	//"github.com/asaskevich/govalidator"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
 	"github.com/rightjoin/aqua"
-	//"net/http"
 	"spinfluence/api/model"
-	// crypt "spinfluence/encrypt_decrypt"
-	// nt "spinfluence/notification/email/util"
-	// "time"
 	"strconv"
 )
 
@@ -82,7 +76,7 @@ func ValidateGetUser(j aqua.Aide) (err error) {
 func GetUser(j aqua.Aide) (response interface{}, err error) {
 	var (
 		Conn *gorm.DB
-		usr  []model.User
+		usr  []model.UserDetails
 	)
 	if Conn, err = dbConn(); err == nil {
 		getUser := `Select user_id, user_name, first_name, last_name, email_id,
@@ -110,7 +104,7 @@ func ValidateGetUserByID(ID int, j aqua.Aide) (err error) {
 func GetUserByID(ID int, j aqua.Aide) (response interface{}, err error) {
 	var (
 		Conn *gorm.DB
-		usr  model.User
+		usr  model.UserDetails
 	)
 	if Conn, err = dbConn(); err == nil {
 		getUser := `Select user_id, user_name, first_name, last_name, email_id, contact_number

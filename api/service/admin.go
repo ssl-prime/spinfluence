@@ -7,7 +7,7 @@ import (
 )
 
 type Admin struct {
-	aqua.RestService `prefix:"admin/" root:"/{fkUserID:[0-9]+}/ktp" version:"1"`
+	aqua.RestService `prefix:"admin/" root:"/" version:"1"`
 	getResult        aqua.POST `url:"/getresult"`
 	getResultByID    aqua.POST `url:"/getresult/{ID:[0-9]+}"`
 	getUser          aqua.POST `url:"/getuser"`

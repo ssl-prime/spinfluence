@@ -12,6 +12,7 @@ import (
 	blk "spinfluence/blockchain/util"
 	crypt "spinfluence/encrypt_decrypt"
 	nt "spinfluence/notification/email/util"
+	"strconv"
 	"time"
 )
 
@@ -287,6 +288,7 @@ func ValidateEndTest(j aqua.Aide) (end_test bool,
 func EndTest(res model.TestResponse, j aqua.Aide) (response interface{}, err error) {
 	/*check answer of each question an insert score into
 	table and add into blockchain */
+
 	mp := make(map[int]string)
 	score := 0
 	ans := res.TotalRes
@@ -294,9 +296,10 @@ func EndTest(res model.TestResponse, j aqua.Aide) (response interface{}, err err
 	for i := 0; i < len(res.TotalRes); i++ {
 		if ans[i].Response == mp[ans[i].ID] {
 			score++
-			kpt = append(kpt, string(ans[i].ID), string(ans[i].Response))
+			kpt = append(kpt, string(ans[i].ID), (ans[i].Response))
 		}
 	}
+	fmt.Println(kpt)
 	var (
 		Conn *gorm.DB
 	)
@@ -412,6 +415,33 @@ func GenerateSessionKey(user_name string, j aqua.Aide) (token string, err error)
 		}
 	} else {
 		fmt.Println("connection not established")
+	}
+	return
+}
+
+//ValiadateGetResult
+func ValidateGetResultUser(ID int, j aqua.Aide) (invalid bool, err error) {
+	var fkUserID int
+	if fkUserID, err = strconv.Atoi(j.Request.Header.Get("fkUserID")); err == nil {
+		if fkUserID == ID {
+			invalid = true
+		}
+	}
+	return
+}
+
+//GetResult
+func GetResultUser(ID int, j aqua.Aide) (response interface{}, err error) {
+	var (
+		Conn    *gorm.DB
+		results []model.Result
+	)
+
+	if Conn, err = dbConn(); err == nil {
+		result := `Select fk_user_id, score, fk_test_type_id, attempt from result where fk_user_id= ?;`
+		if err = Conn.Raw(result, ID).Find(&results).Error; err == nil {
+			response = results
+		}
 	}
 	return
 }

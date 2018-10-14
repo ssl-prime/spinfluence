@@ -10,11 +10,11 @@ type User struct {
 	LastName  string `json:"last_name"  valid:"required"`
 	UserName  string `json:"user_name"  valid:"required"`
 	EmailID   string `json:"email_id"   valid:"required"`
-	ContactNO int64  `json:"contact_no"  valid:"required"`
+	ContactNO string `json:"contact_number"  valid:"required"`
 	Password  string `json:"password"   valid:"required"`
 	Sex       string `json:"sex" valid:"required"`
 	Country   string `json:"country" valid:"required"`
-	IsActive  int    `json:"is_active"`
+	IsActive  int    `json:"-"`
 }
 
 //login

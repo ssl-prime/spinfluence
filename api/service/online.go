@@ -5,6 +5,7 @@ import (
 	"github.com/rightjoin/aqua"
 	"spinfluence/api/model"
 	"spinfluence/api/util"
+	"strconv"
 )
 
 type User struct {
@@ -16,7 +17,7 @@ type User struct {
 	verifyCode       aqua.POST `url:"/verifycode"`
 	changePassword   aqua.POST `url:"/change_password/{token}"`
 	signOut          aqua.GET  `url:"/signout"`
-	getResult        aqua.GET  `url:"/get_result"`
+	getResultUser    aqua.GET  `url:"/getresult_user"`
 	takeTest         aqua.POST `url:"/take_test/{id:[0-9]+}/{test_type_id:[0-9]+}"`
 	endTest          aqua.POST `url:"/end_test"`
 }
@@ -97,12 +98,19 @@ func (usr *User) SignOut(j aqua.Aide) (response interface{}, err error) {
 	return
 }
 
-// func (usr *User) GetResult(j aqua.Aide) (response interface{}, err error) {
-// 	if err = util.ValidateGetResult(j); err == nil {
-// 		response, err = util.GetResult(j)
-// 	}
-// 	return
-// }
+func (usr *User) GetResultUser(j aqua.Aide) (response interface{}, err error) {
+	j.LoadVars()
+	var (
+		ID    int
+		valid bool
+	)
+	if ID, err = strconv.Atoi(j.Request.Header.Get("fkUserID")); err == nil {
+		if valid, err = util.ValidateGetResultUser(ID, j); err == nil && valid {
+			response, err = util.GetResultUser(ID, j)
+		}
+	}
+	return
+}
 
 //TakeTest
 func (usr *User) TakeTest(id string, test_type_id int, j aqua.Aide) (response interface{}, err error) {
